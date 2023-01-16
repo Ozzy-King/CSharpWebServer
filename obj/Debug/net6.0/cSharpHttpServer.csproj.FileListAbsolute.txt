@@ -1,0 +1,45 @@
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.exe
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.deps.json
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.runtimeconfig.json
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.dll
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.pdb
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.AssemblyReference.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfoInputs.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfo.cs
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.CoreCompileInputs.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.dll
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\refint\cSharpHttpServer.dll
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.pdb
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.genruntimeconfig.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\ref\cSharpHttpServer.dll
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.exe
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.deps.json
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.runtimeconfig.json
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.dll
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.pdb
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.AssemblyReference.cache
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.GeneratedMSBuildEditorConfig.editorconfig
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfoInputs.cache
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfo.cs
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.CoreCompileInputs.cache
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.dll
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\refint\cSharpHttpServer.dll
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.pdb
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.genruntimeconfig.cache
+G:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\ref\cSharpHttpServer.dll
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.exe
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.deps.json
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.runtimeconfig.json
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.dll
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.pdb
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.AssemblyReference.cache
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfoInputs.cache
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfo.cs
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.CoreCompileInputs.cache
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.dll
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\refint\cSharpHttpServer.dll
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.pdb
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.genruntimeconfig.cache
+C:\Users\kaleche\Documents\university things\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\ref\cSharpHttpServer.dll

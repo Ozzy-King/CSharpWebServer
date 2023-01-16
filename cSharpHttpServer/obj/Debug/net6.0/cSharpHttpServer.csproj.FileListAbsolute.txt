@@ -1,0 +1,30 @@
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.AssemblyReference.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfoInputs.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfo.cs
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.CoreCompileInputs.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.exe
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.deps.json
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.runtimeconfig.json
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.dll
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.pdb
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.dll
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\refint\cSharpHttpServer.dll
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.pdb
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.genruntimeconfig.cache
+C:\Users\GRUB\source\repos\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\ref\cSharpHttpServer.dll
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.exe
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.deps.json
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.runtimeconfig.json
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.dll
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\bin\Debug\net6.0\cSharpHttpServer.pdb
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.AssemblyReference.cache
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.GeneratedMSBuildEditorConfig.editorconfig
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfoInputs.cache
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.AssemblyInfo.cs
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.csproj.CoreCompileInputs.cache
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.dll
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\refint\cSharpHttpServer.dll
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.pdb
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\cSharpHttpServer.genruntimeconfig.cache
+F:\uni thingd\cSharpHttpServer\cSharpHttpServer\obj\Debug\net6.0\ref\cSharpHttpServer.dll

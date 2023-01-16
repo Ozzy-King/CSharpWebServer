@@ -1,0 +1,38 @@
+            handleingSocket.Send(httpHandler.fullHeaderResponse);
+                    handleingSocket.Send(httpHandler.fullDataResponse);
+                }
+                catch (ObjectDisposedException)
+                {
+                    //if connection closed already
+                    QueueSocketEvent(new SocketEvent(pickedBackgroundColour, "Connection already closed", remoteEnd));
+                    return false;
+                }
+                catch (SocketException)
+                {
+                    //if conection isnt valid
+                    handleingSocket.Shutdown(SocketShutdown.Both);
+                    handleingSocket.Close();
+                    handleingSocket.Dispose();
+
+                    QueueSocketEvent(new SocketEvent(pickedBackgroundColour, "Connection closed", remoteEnd));
+                    return false;
+                }
+                httpHandler.resetResponse();
+            }
+
+            //if the connection ended
+            try
+            {
+                handleingSocket.Shutdown(SocketShutdown.Both);
+                handleingSocket.Close();
+                handleingSocket.Dispose();
+            }
+            catch (ObjectDisposedException) {
+                //if connection is already cloed
+                QueueSocketEvent(new SocketEvent( pickedBackgroundColour, "Connection already closed", remoteEnd));
+                return false;
+            }
+            QueueSocketEvent(new SocketEvent( pickedBackgroundColour, "Connection closed", remoteEnd));
+
+            return false;
+ 
