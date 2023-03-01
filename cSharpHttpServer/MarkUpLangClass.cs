@@ -301,18 +301,18 @@ class Element
         return newArray.ToArray();
     }
 
-    static int Main()
-    {
-        Element test = new Element("root", "");
-        test.createChild("tab1", "test");
-        test.createChild("tab2", "test1");
-        test.createChild("tab2", "test3");
+    //static int Main()
+    //{
+    //    Element test = new Element("root", "");
+    //    test.createChild("tab1", "test");
+    //    test.createChild("tab2", "test1");
+    //    test.createChild("tab2", "test3");
 
-        Console.WriteLine(test.convertMarkupToJson(debug: true));
+    //    Console.WriteLine(test.convertMarkupToJson(debug: true));
 
 
-        return 0;
-    }
+    //    return 0;
+    //}
 
 }
 

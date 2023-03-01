@@ -5,15 +5,16 @@ using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace cSharpHttpServer
 {
-
+    
 
     class HttpHandler
     {
         struct RequestLayout
-        {
+        { 
             public string requestType = "";
             public string requestDirect = "";
             public string RequestDirectExtension = "";
@@ -73,9 +74,16 @@ namespace cSharpHttpServer
             string[] requestSplit = request.Split("\r\n\r\n", StringSplitOptions.RemoveEmptyEntries);//splits into data and headers
             if (requestSplit.Length <= 0) { return false; } //chck there are headers and data
 
+
             //get allheaders
             string[] headers = requestSplit[0].Split("\r\n", StringSplitOptions.RemoveEmptyEntries);//sperate header lines ,the header section
             if (headers.Length <= 0) { return false; } //check there are headers
+
+            //getdata
+            if (requestSplit.Length > 1)
+            {
+                Console.WriteLine(requestSplit[1]);
+            }
 
             //gets the request types
             RequestLayout requestHeader = getRequestLayout(headers[0]);

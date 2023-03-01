@@ -171,7 +171,7 @@ namespace cSharpHttpServer{
         public static int Main() {
             Console.WriteLine("hello there world");
 
-            IPAddress localIp = IPAddress.Parse("192.168.35.6");
+            IPAddress localIp = IPAddress.Parse("10.188.114.91");
 
             HttpServer newServer = new HttpServer(localIp, 80);
 

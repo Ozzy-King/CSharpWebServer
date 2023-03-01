@@ -1,9 +1,28 @@
 <html>
-	<head>
-		<link rel="stylesheet" href="style.css">
-	</head>
+<head>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"
+			integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+			crossorigin="anonymous"></script>
+	<script>
+		function test() {
+            $.post("http://10.188.114.91/","string");
+		}
+		function test2(){
+		    $('#changer').innerHTML = "";
+			$('#changer').load('querytest.html');
+		}
+	</script>
+</head>
 	<body>
 		<h1>Ozzys Website</h1>
 		<p>this is a webpage delivered by my http server</p>
+		<p onclick="test()">
+			test click
+		</p>
+		
+		<p id="changer" onclick="test2()">
+		click to change
+		</p>
+		
 	</body>
 </html>
