@@ -1,4 +1,13 @@
-﻿using System;
+﻿//+-==============================================-+
+//|Arthor: OsbourneClark
+//|Creation: WebServer
+//|Description: webserver that can deliver pages as well as support backend scripting
+//|Date: 02/03/2023
+//|license: MIT License
+//+-==============================================-+
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
@@ -6,18 +15,20 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Xml;
 
 namespace cSharpHttpServer
 {
-    
+
 
     class HttpHandler
     {
         struct RequestLayout
-        { 
+        {
             public string requestType = "";
             public string requestDirect = "";
             public string RequestDirectExtension = "";
+            public string RequestFileName = "";
             public string requestHttpVersion = "";
             public RequestLayout(string requestType, string requestDirect, string requestHttpVersion)
             {
@@ -26,7 +37,10 @@ namespace cSharpHttpServer
                 this.requestHttpVersion = requestHttpVersion;
                 if (requestDirect.Split(".", 2).Length > 1)
                 {
-                    this.RequestDirectExtension = requestDirect.Split(".", 2)[1].ToLower();
+                    string[] parts = requestDirect.Split(".", 2);
+                    this.RequestDirectExtension = parts[1].ToLower();
+                    parts = parts[0].Split("/");
+                    RequestFileName = parts[parts.Length-1];
                 }
             }
 
@@ -41,6 +55,15 @@ namespace cSharpHttpServer
                 this.headerValue = headerValue;
             }
         }
+
+        public Dictionary<string, HttpServer.BacksideFunction> serverSideFunctions;
+        string ip = "", port = "";
+        public HttpHandler(string IP, string PORT, Dictionary<string, HttpServer.BacksideFunction> functions) { 
+            serverSideFunctions = functions;
+            ip = IP;
+            port = PORT;
+        }
+
 
         public byte[] fullHeaderResponse = new byte[0];
         string stringHeaderResponse = "";
@@ -70,20 +93,14 @@ namespace cSharpHttpServer
         public bool parseHTTP(string request)
         {
             bool returningBool = true;
-            //split data, and headers
+            //split data[1](if there), and headers[0]
             string[] requestSplit = request.Split("\r\n\r\n", StringSplitOptions.RemoveEmptyEntries);//splits into data and headers
             if (requestSplit.Length <= 0) { return false; } //chck there are headers and data
 
 
-            //get allheaders
+            //get allheaders seperate
             string[] headers = requestSplit[0].Split("\r\n", StringSplitOptions.RemoveEmptyEntries);//sperate header lines ,the header section
             if (headers.Length <= 0) { return false; } //check there are headers
-
-            //getdata
-            if (requestSplit.Length > 1)
-            {
-                Console.WriteLine(requestSplit[1]);
-            }
 
             //gets the request types
             RequestLayout requestHeader = getRequestLayout(headers[0]);
@@ -94,7 +111,7 @@ namespace cSharpHttpServer
                 requestHeader.RequestDirectExtension = "html";
             }
 
-            //gets all the headers
+            //gets all the headers and lay them out
             HeaderLayout[] layedOutHeaders = GetHeaderLayout(headers);
 
 
@@ -103,6 +120,9 @@ namespace cSharpHttpServer
 
             bool isImage = false;
             bool failedToFind = false;
+
+
+
             //try and simplify this ;)
             switch (requestHeader.requestType)
             {
@@ -111,7 +131,21 @@ namespace cSharpHttpServer
                     {
                         if (requestHeader.RequestDirectExtension == "func")//if it serverside function
                         {
+                            if (serverSideFunctions.ContainsKey(requestHeader.RequestFileName))
+                            {
+                                stringHeaderResponse += httpVersion + " " + responceCode["OK"] + httpTrailer;
+                                stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
+                                stringHeaderResponse += "Content-Type: " + contentTypes["func"] + httpTrailer;
+                                //stringHeaderResponse += httpTrailer;
 
+                                HttpServer.BacksideFunction calledFunc = serverSideFunctions[requestHeader.RequestFileName];
+                                string outData = calledFunc(ip, port, requestSplit[0]);
+
+                                stringDataResponse = outData;
+                                stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
+
+                            }
+                            else { failedToFind = true; }
                         }
                         else//if its anything else
                         {
@@ -134,7 +168,7 @@ namespace cSharpHttpServer
                                     stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
                                 }
 
-                                stringHeaderResponse += httpTrailer;
+                                //stringHeaderResponse += httpTrailer;
                             }
                             else
                             {
@@ -146,37 +180,54 @@ namespace cSharpHttpServer
                     {
                         failedToFind = true;
                     }
-
-                    if (failedToFind)
+                    break;
+                case "POST":
+                    if (requestHeader.RequestDirectExtension == "func")//if it serverside function
                     {
-                        //get the directory path
-                        string directoryPath = "";
-                        for(int i = 0; i < requestHeader.requestDirect.Split("/").Length-1; i++) {
-                            directoryPath += requestHeader.requestDirect.Split("/")[i];
-                        }
-                        
-                        if (File.Exists(directoryPath + "/404.html"))
+                        if (serverSideFunctions.ContainsKey(requestHeader.RequestFileName))
                         {
-                            stringDataResponse = File.ReadAllText("./"+directoryPath + "/404.html", Encoding.UTF8);
+                            stringHeaderResponse += httpVersion + " " + responceCode["OK"] + httpTrailer;
+                            stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
+                            stringHeaderResponse += "Content-Type: " + contentTypes["func"] + httpTrailer;
+                            //stringHeaderResponse += httpTrailer;
+
+                            HttpServer.BacksideFunction calledFunc = serverSideFunctions[requestHeader.RequestFileName];
+                            string outData = calledFunc(ip, port, requestSplit[0]);
+
+                            stringDataResponse = outData;
+                            stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
+
                         }
-                        else { stringDataResponse = "<html><body><h1>404 ERROR</h1><p>File Not Found</p></body></html>"; }
-
-                        //stringDataResponse = File.ReadAllText("./404.html", Encoding.UTF8);
-                        stringHeaderResponse += httpVersion + " " + responceCode["NOT FOUND"] + httpTrailer;
-                        stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
-                        stringHeaderResponse += "Content-Type: " + contentTypes["html"] + httpTrailer;
-                        stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
-                        stringHeaderResponse += httpTrailer;
+                        else { failedToFind = true; }
                     }
-
-                    if (!isImage)
-                    {
-                        fullDataResponse = Encoding.ASCII.GetBytes(stringDataResponse);
-                    }
-                    fullHeaderResponse = Encoding.ASCII.GetBytes(stringHeaderResponse);
                     break;
 
             }
+
+            //if resources canot be found populate header and data with either 404 in current direct or a default 404
+            if (failedToFind)
+            {
+                //get the directory path
+                string directoryPath = "";
+                for (int i = 0; i < requestHeader.requestDirect.Split("/").Length - 1; i++)
+                {
+                    directoryPath += requestHeader.requestDirect.Split("/")[i] + (i == requestHeader.requestDirect.Split("/").Length - 2 ? "" : "/");
+                }
+
+                if (File.Exists("./" + directoryPath + "/404.html"))
+                {
+                    stringDataResponse = File.ReadAllText("./" + directoryPath + "/404.html", Encoding.UTF8);
+                }
+                else { stringDataResponse = "<html><body><h1>404 ERROR</h1><p>File Not Found</p></body></html>"; }
+
+                //stringDataResponse = File.ReadAllText("./404.html", Encoding.UTF8);
+                stringHeaderResponse += httpVersion + " " + responceCode["NOT FOUND"] + httpTrailer;
+                stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
+                stringHeaderResponse += "Content-Type: " + contentTypes["html"] + httpTrailer;
+                stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
+                //stringHeaderResponse += httpTrailer;
+            }
+
 
             //set the return connection thype
             //if the connection isnt persistent
@@ -190,8 +241,16 @@ namespace cSharpHttpServer
                 stringHeaderResponse += "Connection: keep-alive" + httpTrailer;
                 stringHeaderResponse += "Keep-Alive: timeout=5, max=1000" + httpTrailer;
             }
+            stringHeaderResponse += httpTrailer;
             //Console.WriteLine(requestHeader.requestDirect + requestHeader.RequestDirectExtension);
             //Console.WriteLine(stringHeaderResponse);
+
+            if (!isImage) //if i isnt an image encode the response to bytes, image is already bytes
+            {
+                fullDataResponse = Encoding.ASCII.GetBytes(stringDataResponse);
+            }
+            //encode the actual header part to be sent
+            fullHeaderResponse = Encoding.ASCII.GetBytes(stringHeaderResponse);
 
             return returningBool;
         }
