@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Xml;
+using static cSharpHttpServer.HttpServer;
 
 namespace cSharpHttpServer
 {
@@ -56,10 +57,21 @@ namespace cSharpHttpServer
             }
         }
 
-        public Dictionary<string, HttpServer.BacksideFunction> serverSideFunctions;
+        Dictionary<string, BacksideFunctionGET> ServerSideFunctionsGET = new Dictionary<string, BacksideFunctionGET>();
+        Dictionary<string, BacksideFunctionPOST> ServerSideFunctionsPOST = new Dictionary<string, BacksideFunctionPOST>();
+        Dictionary<string, BacksideFunctionPUT> ServerSideFunctionsPUT = new Dictionary<string, BacksideFunctionPUT>();
+        Dictionary<string, BacksideFunctionDELETE> ServerSideFunctionsDELETE = new Dictionary<string, BacksideFunctionDELETE>();
+
         string ip = "", port = "";
-        public HttpHandler(string IP, string PORT, Dictionary<string, HttpServer.BacksideFunction> functions) { 
-            serverSideFunctions = functions;
+        public HttpHandler(string IP, string PORT, Dictionary<string, HttpServer.BacksideFunctionGET> GETfunctions,
+            Dictionary<string, HttpServer.BacksideFunctionPOST> POSTfunctions,
+            Dictionary<string, HttpServer.BacksideFunctionPUT> PUTfunctions,
+            Dictionary<string, HttpServer.BacksideFunctionDELETE> DELETEfunctions) {
+
+            ServerSideFunctionsGET = GETfunctions;
+            ServerSideFunctionsPOST = POSTfunctions;
+            ServerSideFunctionsPUT = PUTfunctions;
+            ServerSideFunctionsDELETE = DELETEfunctions;
             ip = IP;
             port = PORT;
         }
@@ -76,7 +88,10 @@ namespace cSharpHttpServer
 
         readonly Dictionary<string, string> responceCode = new Dictionary<string, string>() {
             {"OK","200 OK" },
-            {"NOT FOUND", "404 NOT FOUND"}
+            {"CREATED", "201 CREATED" },
+            {"NO CONTENT", "204 NO CONTENT"},
+            {"NOT FOUND", "404 NOT FOUND"},
+            {"INTERNAL SERVER ERROR","500 INTERNAL SERVER ERROR"}
         };
         readonly Dictionary<string, string> contentTypes = new Dictionary<string, string>() {
             { "func", "text/html; charset=utf-8"}, //server side function
@@ -115,31 +130,51 @@ namespace cSharpHttpServer
             HeaderLayout[] layedOutHeaders = GetHeaderLayout(headers);
 
 
-            //get data
-            string data = requestSplit.Length > 1 ? requestSplit[1] : "No Data"; //gets the data attached
+            //get and sort out data
+            string data = "";
+            if (requestSplit.Length > 1) {
+                data = requestSplit[1];
+
+
+                string contentLen = GetHeaderValueFromArray(ref layedOutHeaders, "Content-Length");
+                if (contentLen == "NULL") {
+                    data = "";
+                }
+                else {
+                    data = data.Substring(0, int.Parse(contentLen));
+                } 
+            }
+            
+
+
 
             bool isImage = false;
             bool failedToFind = false;
-
+            bool headRequest = false;
 
 
             //try and simplify this ;)
             switch (requestHeader.requestType)
             {
+                //if its a head then do get request and delete the response after so no body is sent
+                //GET STUFF
+                case "HEAD":
+                    headRequest = true;
+                    goto case "GET";
                 case "GET":
                     if (contentTypes.ContainsKey(requestHeader.RequestDirectExtension))
                     {
                         if (requestHeader.RequestDirectExtension == "func")//if it serverside function
                         {
-                            if (serverSideFunctions.ContainsKey(requestHeader.RequestFileName))
+                            if (ServerSideFunctionsGET.ContainsKey(requestHeader.RequestFileName))
                             {
                                 stringHeaderResponse += httpVersion + " " + responceCode["OK"] + httpTrailer;
                                 stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
                                 stringHeaderResponse += "Content-Type: " + contentTypes["func"] + httpTrailer;
                                 //stringHeaderResponse += httpTrailer;
 
-                                HttpServer.BacksideFunction calledFunc = serverSideFunctions[requestHeader.RequestFileName];
-                                string outData = calledFunc(ip, port, requestSplit[0]);
+                                HttpServer.BacksideFunctionGET calledFunc = ServerSideFunctionsGET[requestHeader.RequestFileName];
+                                string outData = calledFunc(ip, port);
 
                                 stringDataResponse = outData;
                                 stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
@@ -181,18 +216,22 @@ namespace cSharpHttpServer
                         failedToFind = true;
                     }
                     break;
+
+                    //UPDATE AND PROCESS STUFF
                 case "POST":
                     if (requestHeader.RequestDirectExtension == "func")//if it serverside function
                     {
-                        if (serverSideFunctions.ContainsKey(requestHeader.RequestFileName))
+                        if (ServerSideFunctionsPOST.ContainsKey(requestHeader.RequestFileName))
                         {
                             stringHeaderResponse += httpVersion + " " + responceCode["OK"] + httpTrailer;
                             stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
                             stringHeaderResponse += "Content-Type: " + contentTypes["func"] + httpTrailer;
                             //stringHeaderResponse += httpTrailer;
 
-                            HttpServer.BacksideFunction calledFunc = serverSideFunctions[requestHeader.RequestFileName];
-                            string outData = calledFunc(ip, port, requestSplit[0]);
+                            HttpServer.BacksideFunctionPOST calledFunc = ServerSideFunctionsPOST[requestHeader.RequestFileName];
+
+
+                            string outData = calledFunc(ip, port, data);
 
                             stringDataResponse = outData;
                             stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
@@ -200,8 +239,82 @@ namespace cSharpHttpServer
                         }
                         else { failedToFind = true; }
                     }
+                    else{
+                        failedToFind= true;
+                    }
                     break;
 
+                    //CREATE STUFF
+                case "PUT":
+                    if (requestHeader.RequestDirectExtension == "func")//if it serverside function
+                    {
+                        if (ServerSideFunctionsPOST.ContainsKey(requestHeader.RequestFileName))
+                        {
+                            //stringHeaderResponse += httpTrailer;
+
+                            HttpServer.BacksideFunctionPUT calledFunc = ServerSideFunctionsPUT[requestHeader.RequestFileName];
+                            bool outData = calledFunc(ip, port, data);
+
+                            if (outData) { 
+                               stringHeaderResponse += httpVersion + " " + responceCode["CREATED"] + httpTrailer;
+                            }
+                            else{
+                                stringHeaderResponse += httpVersion + " " + responceCode["INTERNAL SERVER ERROR"] + httpTrailer; 
+                            }
+
+                            stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
+                            stringHeaderResponse += "Content-Type: " + contentTypes["func"] + httpTrailer;
+
+                            stringDataResponse = "";
+                            stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
+
+                        }
+                        else { failedToFind = true; }
+                    }
+                    else
+                    {
+                        failedToFind = true;
+                    }
+                    break;
+
+                    //DELETE STUFF
+                case "DELETE":
+                    if (requestHeader.RequestDirectExtension == "func")//if it serverside function
+                    {
+                        if (ServerSideFunctionsPOST.ContainsKey(requestHeader.RequestFileName))
+                        {
+                            //stringHeaderResponse += httpTrailer;
+
+                            HttpServer.BacksideFunctionDELETE calledFunc = ServerSideFunctionsDELETE[requestHeader.RequestFileName];
+                            bool outData = calledFunc(ip, port, data);
+
+                            if (outData)
+                            {
+                                stringHeaderResponse += httpVersion + " " + responceCode["NO CONTENT"] + httpTrailer;
+                            }
+                            else
+                            {
+                                stringHeaderResponse += httpVersion + " " + responceCode["INTERNAL SERVER ERROR"] + httpTrailer;
+                            }
+
+                            stringHeaderResponse += "Server: OzzysServer" + httpTrailer;
+                            stringHeaderResponse += "Content-Type: " + contentTypes["func"] + httpTrailer;
+
+                            stringDataResponse = "";
+                            stringHeaderResponse += "Content-Length: " + stringDataResponse.Length + httpTrailer;
+
+                        }
+                        else { failedToFind = true; }
+                    }
+                    else
+                    {
+                        failedToFind = true;
+                    }
+                    break;
+
+                default:
+                    failedToFind = true;
+                    break;
             }
 
             //if resources canot be found populate header and data with either 404 in current direct or a default 404
@@ -228,6 +341,10 @@ namespace cSharpHttpServer
                 //stringHeaderResponse += httpTrailer;
             }
 
+            //if its a head request no data is needed for the responces so set to nothing;
+            if (headRequest) {
+                stringDataResponse = "";
+            }
 
             //set the return connection thype
             //if the connection isnt persistent
@@ -242,10 +359,10 @@ namespace cSharpHttpServer
                 stringHeaderResponse += "Keep-Alive: timeout=5, max=1000" + httpTrailer;
             }
             stringHeaderResponse += httpTrailer;
-            //Console.WriteLine(requestHeader.requestDirect + requestHeader.RequestDirectExtension);
-            //Console.WriteLine(stringHeaderResponse);
 
-            if (!isImage) //if i isnt an image encode the response to bytes, image is already bytes
+
+            //if i isnt an image encode the response to bytes, image is already bytes
+            if (!isImage) 
             {
                 fullDataResponse = Encoding.ASCII.GetBytes(stringDataResponse);
             }
@@ -284,6 +401,7 @@ namespace cSharpHttpServer
 
         string GetHeaderValueFromArray(ref HeaderLayout[] headers, string headerName)
         {
+            headerName = headerName.ToLower();
             for (int i = 0; i < headers.Length; ++i)
             {
                 if (headers[i].headerType == headerName)

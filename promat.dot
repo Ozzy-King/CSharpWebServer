@@ -1,0 +1,21 @@
+digraph WebServerClassLinking{
+	graph [
+		rankdir = "LR"
+	];
+	"serverClass" [
+		label = "<f0> HttpServer| <f1> -struct socketEvent| <f2> -backsideFunctions(GET, POST, PUT, DELETE) : function pointer| <F3> -ListeningSockets: socketClass| <F4> -OpenSockets: List\<socketClass\>| <F5> -SocketEventQueue: Queue\<socketEvent\>| <F6>------------------------------------------------------------------------------------- | <F7> +Constructor(:IP, :PORT, :FUNCTIONS(GET,POST,PUT,DELETE)) : | <F8> +Start() :bool| <F9> +connectionHandler( :socket) :bool| <F10> +QueueSocketEvent( :socketEvent) :|"
+		shape = "record"
+	];
+	"socketEvent" [
+		label = "<f0> socketEvent| <f1> +backgroundColour: consoleColor | <f2> +Message: string | <f3> Endport: IP-PORT | <f4> | <f5> +constructor(:consoleColor, :string, :IP-PORT) : |"
+		shape = "record"
+	];
+	"httpParser" [
+		label = "<f0> HttpServer| <f1> -backsideFunctions(GET, POST, PUT, DELETE) : function pointer| <F2> -ListeningSockets: socketClass| <F3> -OpenSockets: List\<socketClass\>| <F4> -SocketEventQueue: Queue\<socketEvent\>| <F5>------------------------------------------------------------------------------------- | <F6> +Constructor(:IP, :PORT, :FUNCTIONS(GET,POST,PUT,DELETE)) : | <F7> +Start() :bool| <F8> +connectionHandler( :socket) :bool| <F9> +QueueSocketEvent( :socketEvent) :|"
+		shape = "record"
+	];
+	
+	
+	serverClass:f1 -> socketEvent:f0 [id = 0];
+	
+}

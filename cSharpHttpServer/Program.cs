@@ -24,8 +24,17 @@ namespace cSharpHttpServer {
 
         //backend scripts
         //the connecting ip, the connecting port, data sent(if any)
-        public delegate string BacksideFunction(string IP, string PORT, string DATA);
-        Dictionary<string, BacksideFunction> ServerSideFunctions = new Dictionary<string, BacksideFunction>();
+
+        //TODO implement this so porper functions can be defined for each request type<-------------OVERHERE---------------------------------------------------------------------------------------------
+        public delegate string BacksideFunctionGET(string IP, string PORT); //get resources
+        public delegate string BacksideFunctionPOST(string IP, string PORT, string DATA); //create and process
+        public delegate bool BacksideFunctionPUT(string IP, string PORT, string DATA); //update resources succeds if 0
+        public delegate bool BacksideFunctionDELETE(string IP, string PORT, string DATA); //deletes precess succeds if 0
+
+        Dictionary<string, BacksideFunctionGET> ServerSideFunctionsGET = new Dictionary<string, BacksideFunctionGET>();
+        Dictionary<string, BacksideFunctionPOST> ServerSideFunctionsPOST = new Dictionary<string, BacksideFunctionPOST>();
+        Dictionary<string, BacksideFunctionPUT> ServerSideFunctionsPUT = new Dictionary<string, BacksideFunctionPUT>();
+        Dictionary<string, BacksideFunctionDELETE> ServerSideFunctionsDELETE = new Dictionary<string, BacksideFunctionDELETE>();
 
         //initial set up
         bool successfulCreation = false;
@@ -49,10 +58,16 @@ namespace cSharpHttpServer {
         }
 
 
-        public HttpServer(IPAddress localIP, int localPort, Dictionary<string, BacksideFunction> func) {
+        public HttpServer(IPAddress localIP, int localPort, Dictionary<string, BacksideFunctionGET> funcGET,
+            Dictionary<string, BacksideFunctionPOST> funcPOST,
+            Dictionary<string, BacksideFunctionPUT> funcPUT,
+            Dictionary<string, BacksideFunctionDELETE> funcDELETE) {
 
             //creates local end point
-            ServerSideFunctions = func;
+            ServerSideFunctionsGET = funcGET;
+            ServerSideFunctionsPOST = funcPOST;
+            ServerSideFunctionsPUT = funcPUT;
+            ServerSideFunctionsDELETE = funcDELETE;
             localEndPoint = new IPEndPoint(localIP, localPort);
             ServerListenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             successfulCreation = true;
@@ -83,7 +98,7 @@ namespace cSharpHttpServer {
             ConsoleColor pickedBackgroundColour = (ConsoleColor)(new Random().Next(1, 100) % 15) + 1;
             if (remoteEnd == null) { return false; }
 
-            HttpHandler httpHandler = new HttpHandler(remoteEnd.Address.ToString(), remoteEnd.Port.ToString(), ServerSideFunctions);
+            HttpHandler httpHandler = new HttpHandler(remoteEnd.Address.ToString(), remoteEnd.Port.ToString(), ServerSideFunctionsGET, ServerSideFunctionsPOST, ServerSideFunctionsPUT, ServerSideFunctionsDELETE);
             byte[] recvBuffer = new byte[2048]; //recived memory 2KB
             //sets recive timeout to 1second
             handleingSocket.ReceiveTimeout = 5000;//timeout for keepalive connections
@@ -182,23 +197,44 @@ namespace cSharpHttpServer {
     }
 
     class mainClass{
-        static string test(string IP, string PORT, string DATA)
+        public static bool FilePathHasInvalidChars(string path)
+        {
+
+            return (!string.IsNullOrEmpty(path) && path.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0);
+        }
+        static string test(string IP, string PORT)
         {
             string returnstr = "<html><body><h1>connected with Ip: " + IP + "</h1><h1>on Port: " + PORT + "</h1></body></html>";
             return returnstr;
+        }
+        static string echo(string IP, string PORT, string DATA) {
+            return "<h1>Hello Im the server. Echoing Back: "+DATA+"</h1>";
+        }
+        static string echoFile(string IP, string PORT, string DATA)
+        {
+            string filedata = "not found";
+            if (File.Exists(DATA)) {
+                filedata = File.ReadAllText(DATA);
+            }
+            return "<h1>" + filedata + "</h1>";
         }
 
         public static int Main()
         {
             Console.WriteLine("hello there world");
 
-
-            Dictionary<string, HttpServer.BacksideFunction> serverFunctions = new Dictionary<string, HttpServer.BacksideFunction>(){
-                { "func1", new HttpServer.BacksideFunction(test)}
+            Dictionary<string, HttpServer.BacksideFunctionGET> serverFunctionsGET = new Dictionary<string, HttpServer.BacksideFunctionGET>(){
+                { "func1", new HttpServer.BacksideFunctionGET(test)}
             };
+            Dictionary<string, HttpServer.BacksideFunctionPOST> serverFunctionsPOST = new Dictionary<string, HttpServer.BacksideFunctionPOST>() {
+                { "echo", new HttpServer.BacksideFunctionPOST(echo)},
+                { "fileFetch", new HttpServer.BacksideFunctionPOST(echoFile)}
+            };
+            Dictionary<string, HttpServer.BacksideFunctionPUT> serverFunctionsPUT = new Dictionary<string, HttpServer.BacksideFunctionPUT>();
+            Dictionary<string, HttpServer.BacksideFunctionDELETE> serverFunctionsDELETE = new Dictionary<string, HttpServer.BacksideFunctionDELETE>();
 
-            IPAddress localIp = IPAddress.Parse("192.168.35.6");
-            HttpServer newServer = new HttpServer(localIp, 80, serverFunctions);
+            IPAddress localIp = IPAddress.Parse("127.0.0.1");
+            HttpServer newServer = new HttpServer(localIp, 80, serverFunctionsGET, serverFunctionsPOST, serverFunctionsPUT, serverFunctionsDELETE);
 
             Thread printingThings = new Thread(() => { newServer.printQueueEvent(); });
             printingThings.Start();

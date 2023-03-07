@@ -5,24 +5,57 @@
 			crossorigin="anonymous"></script>
 	<script>
 		function test() {
-            console.log($.post("http://192.168.35.6/func1.func",""));
+			let serverfunc = document.getElementById("GETTestInput").value;
+            $.get("http://127.0.0.1/"+serverfunc,"", function(data){
+				document.getElementById("getTest").innerHTML = data;
+				});
 		}
-		function test2(){
-		    $('#changer').innerHTML = "";
-			$('#changer').load('querytest.html');
+		function test1() {
+			let serverfunc = document.getElementById("PostTestfunction").value;
+			let serverdata = document.getElementById("PostTestInput").value;
+            $.post("http://127.0.0.1/"+serverfunc,serverdata, function(data){
+				document.getElementById("postTest").innerHTML = data;
+			});
 		}
 	</script>
 </head>
 	<body>
 		<h1>Ozzys Website</h1>
 		<p>this is a webpage delivered by my http server</p>
-		<p onclick="test()">
-			test click
-		</p>
-		
-		<p id="changer" onclick="test2()">
-		click to change
-		</p>
+		<table>
+			<tr>
+				<th>
+					<button onclick="test()">			
+						test click for GET request function
+					</button>
+				</th>
+				<th>
+					<button onclick="test1()">
+						test click for POST request function
+					</button>
+				</th>
+			</tr>
+			
+			<tr>
+				<th>
+					<input type="text" id="GETTestInput" name="fname" placeholder="enter resources to get(includes functions)">
+				</th>
+				<th>
+					<input type="text" id="PostTestfunction" name="fname" placeholder="enter function to for post">
+					<input type="text" id="PostTestInput" name="fname" placeholder="enter data to send">
+				</th>
+			</tr>
+			
+			<tr>
+				<th id="getTest"> 
+					test click for GET request function
+				</th>
+				<th id="postTest">
+					test click for POST request function
+				</th>
+			</tr>
+			
+		</table>
 		
 	</body>
 </html>
